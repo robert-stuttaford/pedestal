@@ -11,6 +11,7 @@
 
 (ns io.pedestal.app.render.push.handlers.automatic
   (:require [io.pedestal.app.util.log :as log]
+            [io.pedestal.app.util.platform :as platform]
             [io.pedestal.app.render.push :as render]
             [io.pedestal.app.messages :as msg]
             [io.pedestal.app.render.push.cljs-formatter :as formatter]
@@ -105,7 +106,7 @@
         value (.-value (d/by-id field-id))
         {:keys [validation-fn inline-help-error]} (modal-field transform-name (name sym))]
     (if (validation-fn value)
-      {:value value}
+      {:value (platform/safe-read-string value)}
       {:value value :error true :field-id field-id :message inline-help-error})))
 
 (defn- get-modal-values [id transform-name syms]
